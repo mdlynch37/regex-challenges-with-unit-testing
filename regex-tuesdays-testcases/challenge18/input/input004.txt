@@ -1,0 +1,1 @@
+[_]!abc@test PRIVMSG #chat :Test

@@ -1,0 +1,1 @@
+ChanServ!ChanServ@Services. PRIVMSG callum :The message can contain anything except new lines.
