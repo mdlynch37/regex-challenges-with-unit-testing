@@ -1,1 +1,2 @@
-* Repeated list item<br>* Repeated list item
+* Repeated list item
+* Repeated list item

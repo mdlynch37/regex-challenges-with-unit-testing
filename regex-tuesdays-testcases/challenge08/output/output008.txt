@@ -1,1 +1,2 @@
-* Two spaces before second bullet<br>*  **Two spaces before second bullet**
+* Two spaces before second bullet
+*  **Two spaces before second bullet**

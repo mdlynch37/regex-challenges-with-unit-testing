@@ -1,1 +1,2 @@
-* First list item<br>* Second list item
+* First list item
+* Second list item

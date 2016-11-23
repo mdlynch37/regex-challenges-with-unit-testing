@@ -4,7 +4,7 @@ import re
 
 class RegexTuesdayTestcaseScraper():
 
-    HTML_ENTITIES = [(r'&lt;', r'<'), (r'&gt;', r'>')]
+    HTML_ENTITIES = [(r'&lt;', r'<'), (r'&gt;', r'>'), (r'<br>', '\n')]
 
     def __init__(self, filepath_to_html):
         # extract and format title of challenge
@@ -18,20 +18,50 @@ class RegexTuesdayTestcaseScraper():
         re_n_tests = re.compile(r'id=\'passed-count\'>0</span>/([0-9]+)\)')
         self.n_tests = int(re_n_tests.search(self.challenge_html).group(1))
 
-    def _replace_html_ents(self, test_data):
+        if ('<input type="text" id="replace" placeholder="Replace with">'
+            not in self.challenge_html):
+            self.match_challenge = True
+        else:
+            self.match_challenge = False
+
+    def _convert_html_ents(self, test_data):
+        """
+        Convert special character entities to equivalent character.
+        E.g. instances of '&lt;' are replaced with '<'
+        """
+
         for entity, repl in RegexTuesdayTestcaseScraper.HTML_ENTITIES:
-            test_data = re.sub(entity, repl, test_data)
+            test_data = test_data.replace(entity, repl)
         return test_data
+
+    def _match_to_bool(self, test_out):
+        """
+        Converts 'match' and 'no match' in output data to
+        'True' and 'False', respectively.
+        """
+
+        if test_out.startswith('no match'):
+            return 'False'
+        elif test_out.startswith('match'):
+            return 'True'
+        else:
+            raise Exception("Expected 'match' or 'no match' test output for "
+                            "{}\nRecieved: {}".format(self.title, test_out))
+
 
     def _extract_test_values(self):
         """
         Yields test input and output pairs as tuples,
-        html entities in the data replaced withproper characters.
+        html entities in the data replaced with proper characters.
         """
         for test_data in re.finditer(r'<dt>(.*)</dt><dd>(.*)</dd>',
                                      self.challenge_html):
-            yield (self._replace_html_ents(test_data.group(1)),
-                   self._replace_html_ents(test_data.group(2)))
+            test_in =  self._convert_html_ents(test_data.group(1))
+            test_out = self._convert_html_ents(
+                        self._match_to_bool(test_data.group(2))
+                        if self.match_challenge else test_data.group(2))
+
+            yield (test_in, test_out)
 
     def save_test_data(self, save_dir='./'):
         save_dir = save_dir[:-1] if save_dir[-1] == '/' else save_dir

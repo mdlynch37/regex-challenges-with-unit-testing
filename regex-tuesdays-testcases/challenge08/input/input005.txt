@@ -1,1 +1,4 @@
-* First repeated<br>* First repeated<br>* Second repeated<br>* Second repeated
+* First repeated
+* First repeated
+* Second repeated
+* Second repeated

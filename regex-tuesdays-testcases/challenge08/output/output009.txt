@@ -1,1 +1,2 @@
-* Case insensitive<br>* **CASE inSensiTIVE**
+* Case insensitive
+* **CASE inSensiTIVE**
