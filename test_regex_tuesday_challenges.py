@@ -202,14 +202,38 @@ class TestRegexTuesdayFunctions(unittest.TestCase):
                                  msg=self.format_failure_msg(
                                      test_in, output, test_out))
 
-    def test_match_elements_50_or_less(self):
+    def test_match_chem_elements(self):
         testcase_folder = '/'.join([TestRegexTuesdayFunctions.TESTCASE_FOLDER,
                                     'challenge14'])
 
         for fp_in, test_in, fp_out, test_out in self.read_testcases(
                 testcase_folder):
             with self.subTest(filepath_in=fp_in, filepath_out=fp_out):
-                output = str(bool(rt.match_elements_50_or_less(test_in)))
+                output = str(bool(rt.match_chem_elements(test_in)))
+                self.assertEqual(output, test_out,
+                                 msg=self.format_failure_msg(
+                                     test_in, output, test_out))
+
+    def test_match_valid_js_regex(self):
+        testcase_folder = '/'.join([TestRegexTuesdayFunctions.TESTCASE_FOLDER,
+                                    'challenge17'])
+
+        for fp_in, test_in, fp_out, test_out in self.read_testcases(
+                testcase_folder):
+            with self.subTest(filepath_in=fp_in, filepath_out=fp_out):
+                output = str(bool(rt.match_valid_js_regex(test_in)))
+                self.assertEqual(output, test_out,
+                                 msg=self.format_failure_msg(
+                                     test_in, output, test_out))
+
+    def test_match_irc_message(self):
+        testcase_folder = '/'.join([TestRegexTuesdayFunctions.TESTCASE_FOLDER,
+                                    'challenge18'])
+
+        for fp_in, test_in, fp_out, test_out in self.read_testcases(
+                testcase_folder):
+            with self.subTest(filepath_in=fp_in, filepath_out=fp_out):
+                output = str(bool(rt.match_irc_message(test_in)))
                 self.assertEqual(output, test_out,
                                  msg=self.format_failure_msg(
                                      test_in, output, test_out))

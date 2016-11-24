@@ -263,7 +263,7 @@ def fix_whitespace(text):  # Challenge: Week 12
     return fixed[:-1]  # remove last space
 
 
-def match_elements_50_or_less(text):  # Challenge: Week 14
+def match_chem_elements(text):  # Challenge: Week 14
     """
     Match if input is a valid short name for elements on the period table
     with an amotic number of 50 or less.
@@ -280,6 +280,75 @@ def match_elements_50_or_less(text):  # Challenge: Week 14
             """, text, re.VERBOSE)
 
     return elem_match
+
+def match_valid_js_regex(text):  # Challenge: Week 17
+    """
+    Match if input is a valid regular expression compatible with the
+    JavaScript regex engine (similar to PCRE).
+
+    Parts of a regex that should be matched:
+    - literal characters
+    - character classes
+    - .?+* operators
+    - the global and case insensitive operators ('i' and 'g')
+
+    Example input:
+    /regexp?/gi     (valid)
+    /[Rr]eg[Ee]xp?/ (valid)
+    /[Rr]egE**xp?/  (invalid)
+
+    :param string: any text
+    :return: match obj if valid regex, None otherwise
+    """
+
+    valid_regex = re.fullmatch(r"""
+            /(([\\][.?+*/]|   # escaped metacharacters
+                [\\]?[a-z]|   # literals, escaped chars
+                [[][^]]*[]])  # character class, incl. null class for js
+             ([.?+*][?]?)?)+  # quantifiers, incl. ? as a lazy qualifier
+            /g?i?            # js flags
+
+            """, text, re.VERBOSE|re.IGNORECASE)
+
+    return valid_regex
+
+def match_irc_message(text):  # Challenge: Week 18
+    """
+    Match a valid IRC message sent to a user or channel.
+
+    A valid message comprises:
+    - from:      nickname!user@host
+    - command:   PRIVMSG for messages
+    - to:        #channel or nickname
+    - message:   :msg (can be one or more of any char except a newline)
+
+    For protocol spec, see test data and RFC 2812
+        (https://tools.ietf.org/html/rfc2812).
+
+    Example input:
+    callum!callum@lynx.io PRIVMSG #chat :Hello!  (valid)
+    [_]!abc@test PRIVMSG #chat :Test             (valid)
+    (cm)!callum@lynx.io PRIVMSG #chat :Hello!    (invalid)
+
+    :param string: any text
+    :return: match obj if valid regex, None otherwise
+    """
+
+    valid_irc = re.fullmatch(r"""
+            (?P<nick>[a-zA-z\[\]{}`^\\|][\w\[\]{}`^\\|-]{,15})![^!]
+            (?P<from>(?:[\w.%+!-]+)?(?:@[a-zA-Z0-9.-]+))+[ ]+
+            (?P<cmd>PRIVMSG)[ ]+
+            (?P<to>[#][^\s,]{1,50}|
+                [a-zA-z\[\]{}`^\\|][\w\[\]{}`^\\|-]{,15})[ ]+
+            (?P<msg>:[\S][^\n\r]{,509})(?:[\n\r]|$)
+
+
+            """, text, re.VERBOSE)
+
+    return valid_irc
+
+
+
 
 
 
